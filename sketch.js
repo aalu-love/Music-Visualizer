@@ -5,21 +5,20 @@ let particles = []
 let baseSize = 0, pixelRatio = 0, growSize = 0
 let FileDone = false
 var audioFile, audioSrc
-// let songs = ['Alan Walker - The Drum (Official Music Video)_2.mp3', 'videoplayback.mp3']
+let songs = ['Alan Walker - The Drum (Official Music Video)_2.mp3', 'videoplayback.mp3']
 
-
-function loadMusic(){
-    blodFile = document.getElementById('uploadFile')
-    audioFile = document.getElementById('audio')
-    if(blodFile!=undefined){
-        file = blodFile.value.split("\\")[2]
-        if(file!=undefined){
-            audioSrc = file
-            FileDone = true
-            preload()
-        }
-    }
-}
+// function loadMusic(){
+//     blodFile = document.getElementById('uploadFile')
+//     audioFile = document.getElementById('audio')
+//     if(blodFile!=undefined){
+//         file = blodFile.value.split("\\")[2]
+//         if(file!=undefined){
+//             audioSrc = file
+//             FileDone = true
+//             preload()
+//         }
+//     }
+// }
 
 class Particle {
     constructor(){
@@ -63,11 +62,12 @@ class Particle {
     }
 }
 
-function preload(){
+function preload(l){
     img = loadImage('wallpaper.jpg')
-    if(FileDone){
-        song = loadSound(audioSrc)
-    }
+    song = loadSound(songs)
+    // if(FileDone){
+    //     song = loadSound(audioSrc)
+    // }
 }
 
 function setup(){
@@ -105,9 +105,9 @@ function draw(){
     push()
     textSize(midEnergy/327)
     image(img, 0, 0, img.width+(midEnergy/(pixelRatio*69)), img.height+(midEnergy/(pixelRatio*69)))
-    fill(255,0,0)
+    //fill(255,0,0)
     // rect(0, 0, 20, bass/100)
-    text(floor(midEnergy), 0, 50)
+    //text(floor(midEnergy), 0, 50)
     // fill(0,255,0)
     // rect(30, 0, 20, mid/100)
     //text(floor(val), 0, 0)
@@ -131,31 +131,27 @@ function draw(){
         endShape()
     }
 
-    if(FileDone){
-        const p = new Particle()
-        particles.push(p)
-    
-        for(var i=0; i<particles.length; i++){
-            if(!particles[i].edges()){
-                particles[i].update(midEnergy)
-                particles[i].show()
-            } else {
-                particles.splice(i, 1)
-            }
+    const p = new Particle()
+    particles.push(p)
+
+    for(var i=0; i<particles.length; i++){
+        if(!particles[i].edges()){
+            particles[i].update(midEnergy)
+            particles[i].show()
+        } else {
+            particles.splice(i, 1)
         }
     }
 
 }
 
 function mouseClicked(){
-    if(FileDone){
-        if(song.isPlaying()){
-            song.pause()
-            noLoop()
-        }else{
-            song.play()
-            loop()
-        }
+    if(song.isPlaying()){
+        song.pause()
+        noLoop()
+    }else{
+        song.play()
+        loop()
     }
 }
 
