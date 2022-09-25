@@ -5,7 +5,13 @@ let particles = []
 let baseSize = 0, pixelRatio = 0, growSize = 0
 let FileDone = false
 var audioFile, audioSrc
-let songs = ['Alan Walker - The Drum (Official Music Video)_2.mp3', 'videoplayback.mp3']
+//let songs = ['Alan Walker - The Drum (Official Music Video)_2.mp3', 'videoplayback.mp3']
+let fileLoad = false
+const songPlay = () => {
+    song.play()
+}
+
+const audioEl = document.getElementById('audio')
 
 // function loadMusic(){
 //     blodFile = document.getElementById('uploadFile')
@@ -19,6 +25,22 @@ let songs = ['Alan Walker - The Drum (Official Music Video)_2.mp3', 'videoplayba
 //         }
 //     }
 // }
+
+// File upload
+document.getElementById('uploadFile').addEventListener( 'change', e => loadSong( e.target ) );
+
+// Load song from user's computer
+function loadSong( el ) {
+	const fileBlob = el.files[0]
+
+	if ( fileBlob ) {
+		audioEl.src = URL.createObjectURL( fileBlob )
+		//audioEl.play()
+        song = loadSound(audioEl.src)
+        fileLoad = true
+        songPlay
+	}
+}
 
 class Particle {
     constructor(){
@@ -64,14 +86,15 @@ class Particle {
 
 function preload(l){
     img = loadImage('wallpaper.jpg')
-    song = loadSound(songs)
+    //song = loadSound(songs)
     // if(FileDone){
     //     song = loadSound(audioSrc)
     // }
 }
 
 function setup(){
-    createCanvas(windowWidth, windowHeight);
+    var myCanvas = createCanvas(windowWidth, windowHeight-50);
+    myCanvas.parent("canvas-id")
     angleMode(DEGREES)
     imageMode(CENTER)
     rectMode(CENTER)
@@ -103,11 +126,11 @@ function draw(){
     //console.log("Bass",bass, "Mid",mid, "Low",treble)
   
     push()
-    textSize(midEnergy/327)
+    //textSize(32+midEnergy/327)
     image(img, 0, 0, img.width+(midEnergy/(pixelRatio*69)), img.height+(midEnergy/(pixelRatio*69)))
     //fill(255,0,0)
     // rect(0, 0, 20, bass/100)
-    //text(floor(midEnergy), 0, 50)
+    //text("aalu-love", -40, 0)
     // fill(0,255,0)
     // rect(30, 0, 20, mid/100)
     //text(floor(val), 0, 0)
@@ -146,12 +169,14 @@ function draw(){
 }
 
 function mouseClicked(){
-    if(song.isPlaying()){
-        song.pause()
-        noLoop()
-    }else{
-        song.play()
-        loop()
+    if(fileLoad){
+        if(song.isPlaying()){
+            song.pause()
+            noLoop()
+        }else{
+            song.play()
+            loop()
+        }
     }
 }
 
