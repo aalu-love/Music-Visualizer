@@ -64,7 +64,7 @@ class Particle {
 
 function preload(l){
     img = loadImage('wallpaper.jpg')
-    song = loadSound(songs)
+    song = loadSound("/"+songs)
     // if(FileDone){
     //     song = loadSound(audioSrc)
     // }
