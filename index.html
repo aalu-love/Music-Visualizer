@@ -2,8 +2,21 @@
 <html>
     <head>
         <title>Music Visualizer</title>
-        <script src="p5/p5.min.js"></script>
-        <script src="p5/p5.sound.js"></script>
-        <script src="sketch.js"></script>
+        <link rel="icon" type="image/png" href="/favicon.png">
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+            }
+        </style>
     </head>
+    <body>
+        <div id="canvas-id"></div>
+        Load audio file:
+			<input type="file" id="uploadFile" accept="audio/*">
+            <audio id="audio" controls crossorigin="anonymous" style="display:none"></audio>
+    </body>
+    <script src="../p5/p5.min.js"></script>
+    <script src="../p5/p5.sound.js"></script>
+    <script src="../sketch.js"></script>
 </html>
