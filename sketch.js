@@ -13,19 +13,6 @@ const songPlay = () => {
 
 const audioEl = document.getElementById('audio')
 
-// function loadMusic(){
-//     blodFile = document.getElementById('uploadFile')
-//     audioFile = document.getElementById('audio')
-//     if(blodFile!=undefined){
-//         file = blodFile.value.split("\\")[2]
-//         if(file!=undefined){
-//             audioSrc = file
-//             FileDone = true
-//             preload()
-//         }
-//     }
-// }
-
 // File upload
 document.getElementById('uploadFile').addEventListener( 'change', e => loadSong( e.target ) );
 
@@ -86,14 +73,10 @@ class Particle {
 
 function preload(l){
     img = loadImage('wallpaper.jpg')
-    //song = loadSound(songs)
-    // if(FileDone){
-    //     song = loadSound(audioSrc)
-    // }
 }
 
 function setup(){
-    var myCanvas = createCanvas(windowWidth, windowHeight-50);
+    var myCanvas = createCanvas(windowWidth, windowHeight-4);
     myCanvas.parent("canvas-id")
     angleMode(DEGREES)
     imageMode(CENTER)
@@ -172,19 +155,9 @@ function mouseClicked(){
     if(fileLoad){
         if(song.isPlaying()){
             song.pause()
-            noLoop()
         }else{
             song.play()
             loop()
         }
     }
 }
-
-
-// function inRange(freq1, freq2, val){
-//     if(freq1 < val && val < freq2){
-//         return true
-//     }
-//     return false
-// }
-
