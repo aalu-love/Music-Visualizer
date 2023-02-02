@@ -49,33 +49,29 @@ class Particle {
     this.w = random(3, 8);
     this.color = [random(200, 255), random(200, 255), random(200, 255)];
   }
-  update(cond) {
-    this.vel.add(this.acc);
-    this.pos.add(this.vel);
-    if (cond > 22220) {
-      // mid : 12700, treble : 6150 bass: 14200
+  update(energy) {
+    // // Add acceleration to velocity
+    // this.vel.add(this.acc);
+
+    // // Add velocity to position
+    // this.pos.add(this.vel);
+
+    // Check energy value and adjust acceleration and velocity accordingly
+    const energyThreshold = 22220;
+    const beats = energy / energyThreshold;
+
+    for (let i = 0; i < beats; i++) {
       this.vel.add(this.acc);
       this.vel.add(this.acc);
-      this.pos.add(this.vel);
-      this.pos.add(this.vel);
-    }
-    if (cond > 24020) {
-      // mid : 12700, treble : 6150 bass: 14200
-      this.vel.add(this.acc);
-      this.vel.add(this.acc);
-      this.pos.add(this.vel);
-      this.pos.add(this.vel);
       this.pos.add(this.vel);
       this.pos.add(this.vel);
     }
   }
+
   edges() {
-    if (this.pos.x < -width / 2 || this.pos.x > width / 2 || this.pos.y < -height / 2 || this.pos.y > height / 2) {
-      return true;
-    } else {
-      return false;
-    }
+    return this.x > width / 2 || this.x < -width / 2 || this.y > height / 2 || this.y < -height / 2;
   }
+
   show() {
     noStroke();
     fill(this.color);
@@ -85,6 +81,7 @@ class Particle {
 
 function preload(l) {
   img = loadImage("wallpaper.jpg");
+  console.log(img);
 }
 
 function setup() {
@@ -101,7 +98,7 @@ function setup() {
   baseSize = Math.max(20 * pixelRatio, (canvas.height / 27) | 0);
   growSize = baseSize * 4;
 
-  slider = createSlider(0, !song ? 800 : song.duration(), 0);
+  slider = createSlider(0, !song ? 0 : song.duration(), 0, 0.01);
   slider.position(20, height - 20);
   slider.style("width", `${width - 40}px`);
 }
@@ -114,27 +111,19 @@ function draw() {
   translate(width / 2, height / 2);
 
   fft.analyze();
-  bassEnergy = fft.getEnergy("bass");
-  bassEnergy = baseSize + growSize * bassEnergy;
-  midEnergy = fft.getEnergy("mid");
-  midEnergy = baseSize + growSize * midEnergy;
-  trebleEnergy = fft.getEnergy("treble");
-  trebleEnergy = baseSize + growSize * trebleEnergy;
 
-  //console.log("Bass",bass, "Mid",mid, "Low",treble)
+  const energies = {
+    bass: fft.getEnergy("bass"),
+    mid: fft.getEnergy("mid"),
+    treble: fft.getEnergy("treble"),
+  };
+
+  for (const [key, energy] of Object.entries(energies)) {
+    energies[key] = baseSize + growSize * energy;
+  }
 
   push();
-  //textSize(32+midEnergy/327)
-  image(img, 0, 0, img.width + midEnergy / (pixelRatio * 69), img.height + midEnergy / (pixelRatio * 69));
-  //fill(255,0,0)
-  // rect(0, 0, 20, bass/100)
-  //text("aalu-love", -40, 0)
-  // fill(0,255,0)
-  // rect(30, 0, 20, mid/100)
-  //text(floor(val), 0, 0)
-  // fill(0,0,255)
-  // rect(60, 0, 20, treble/100)
-  // text(floor(trebleEnergy), 0, -50)
+  image(img, 0, 0, img.width + energies.mid / (pixelRatio * 69), img.height + energies.mid / (pixelRatio * 69));
   pop();
 
   var wave = fft.waveform();
@@ -154,15 +143,17 @@ function draw() {
   const p = new Particle();
   particles.push(p);
 
-  for (var i = 0; i < particles.length; i++) {
-    if (!particles[i].edges()) {
-      particles[i].update(midEnergy);
-      particles[i].show();
+  for (let i = 0; i < particles.length; i++) {
+    const particle = particles[i];
+    if (!particle.edges()) {
+      particle.update(energies.mid, energies.bass);
+      particle.show();
     } else {
-      particles.splice(i, 1);
+      particles.splice(i--, 1);
     }
   }
-  slider.value(!song ? 0 : song.currentTime());
+
+    slider.value(!song ? 0 : song.currentTime());
 }
 
 function mouseClicked() {
