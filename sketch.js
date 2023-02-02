@@ -98,7 +98,7 @@ function setup() {
   baseSize = Math.max(20 * pixelRatio, (canvas.height / 27) | 0);
   growSize = baseSize * 4;
 
-  slider = createSlider(0, !song ? 0 : song.duration(), 0, 0.01);
+  slider = createSlider(0, song ? song.duration() : 800, 0);
   slider.position(20, height - 20);
   slider.style("width", `${width - 40}px`);
 }
@@ -153,7 +153,7 @@ function draw() {
     }
   }
 
-    slider.value(!song ? 0 : song.currentTime());
+    slider.value(song ? song.currentTime() : 0);
 }
 
 function mouseClicked() {
